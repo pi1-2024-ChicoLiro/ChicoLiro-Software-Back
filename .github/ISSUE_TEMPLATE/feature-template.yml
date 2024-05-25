@@ -1,6 +1,6 @@
 name: New Feature
 description: Register a new Feature in the ChicoLiro Project
-title: "[US <Código da US>]: <Título da US no verbo Infinitivo>"
+title: "[FEATURE]: <Título da Feature no verbo Infinitivo>"
 labels: ["FEAT", "DevOps"]
 projects: ["pi1-2024-ChicoLiro/ChicoLiro-Board"]
 body:
