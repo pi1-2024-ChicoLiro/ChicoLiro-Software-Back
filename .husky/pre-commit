@@ -1,0 +1,8 @@
+echo 'Checking for linting errors before commiting...'
+
+# npm run lint ||
+# (echo 'Linting errors. Please fix them before commiting.' && exit 1)
+
+echo '\nChecking your code format with prettier.'
+npm run check-format ||
+(echo 'Your code is not formatted correctly. Please execute: \n\n npm run format\n\nto fix the errors and run git add again.' && exit 1)
