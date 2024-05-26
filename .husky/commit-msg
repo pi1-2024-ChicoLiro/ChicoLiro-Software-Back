@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo 'Checking your commit message according to the protocol: Conventional Commits... \n'
+
+npx --no -- commitlint --edit ${1} ||
+(echo "Opps! \n You don't seem to be following Conventional Commits protocol. Use one of the prefixes: \n build: \n chore: \n ci: \n docs: \n feat: \n fix: \n perf: \n refactor: \n revert: \n style: \n test:" && exit 1)
