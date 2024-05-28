@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
-import { CreateTesteDto } from './dto/create-teste.dto';
-import { UpdateTesteDto } from './dto/update-teste.dto';
+import { DataService } from 'src/queue/src/modules/data/data.service';
 
 @Injectable()
 export class TesteService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private queueService: DataService,
+  ) {}
 
-  async create(createTesteDto: CreateTesteDto) {
-    console.log(createTesteDto);
-    const response = await this.prismaService.teste.create({
-      data: createTesteDto,
-    });
-    console.log(response);
-    return response;
+  async create(createTesteDto: any) {
+    await this.queueService.handleData(createTesteDto);
+    // const response = await this.prismaService.teste.create({
+    //   data: createTesteDto,
+    // });
+    // console.log(response);
+    // return response;
   }
 
   findAll() {
@@ -24,7 +26,7 @@ export class TesteService {
     return `This action returns a #${id} teste`;
   }
 
-  update(id: number, updateTesteDto: UpdateTesteDto) {
+  update(id: number, updateTesteDto: any) {
     return `This action updates a #${id} teste`;
   }
 
