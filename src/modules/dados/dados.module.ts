@@ -5,6 +5,6 @@ import { PrismaService } from 'database/prisma.service';
 
 @Module({
   providers: [DadosService, PrismaService],
-  controllers: [DadosController]
+  controllers: [DadosController],
 })
 export class DadosModule {}
