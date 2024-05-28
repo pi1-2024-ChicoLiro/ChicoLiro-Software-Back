@@ -7,8 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Teste {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  age  Int?
+model trilha {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
+  isMoving Boolean
+  startMovingDatetime DateTime
+  endMovingDatetime DateTime
+  dados dados[] @relation("TrilhaDados")
+}
+
+model dados {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  TrilhaID String @db.ObjectId
+  rpm Int
+  infraVermelhoEsq Int
+  infraVermelhoMeio Int
+  infraVermelhoDird Int
+  tensao Int
+  trilha trilha @relation("TrilhaDados", fields: [TrilhaID], references: [id])
+  
+  @@index([TrilhaID], name: "idx_TrilhaID")
 }
