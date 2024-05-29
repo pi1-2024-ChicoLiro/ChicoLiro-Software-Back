@@ -4,7 +4,7 @@ import { TrilhaController } from './trilha.controller';
 import { PrismaService } from 'database/prisma.service';
 
 @Module({
-  providers: [TrilhaService],
-  controllers: [TrilhaController, PrismaService],
+  providers: [TrilhaService, PrismaService],
+  controllers: [TrilhaController],
 })
 export class TrilhaModule {}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
 import { CreateDadosDto } from './dto/create-dados.dto';
 import { UpdateDadosDto } from './dto/update-dados.dto';
@@ -8,22 +8,75 @@ export class DadosService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createDadosDto: CreateDadosDto) {
-    console.log(createDadosDto);
+    try {
+      const response = await this.prismaService.dados.create({
+        data: createDadosDto,
+      });
+
+      console.log(response);
+      return response;
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Could not create the record',
+          errorLog: err,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all teste`;
+  async findAll() {
+    try {
+      const response = await this.prismaService.dados.findMany();
+      return response;
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Could not find the record',
+          errorLog: err,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} teste`;
+  async findOne(id: string) {
+    try {
+      const response = await this.prismaService.dados.findUnique({
+        where: { id },
+      });
+
+      return response;
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Could not find the record',
+          errorLog: err,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  update(id: number, updateTrilhaDto: UpdateDadosDto) {
-    return `This action updates a #${id} teste`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} teste`;
+  async update(id: string, updateDadosDto: UpdateDadosDto) {
+    try {
+      const response = await this.prismaService.dados.update({
+        where: { id },
+        data: updateDadosDto,
+      });
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Could not find the record',
+          errorLog: err,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

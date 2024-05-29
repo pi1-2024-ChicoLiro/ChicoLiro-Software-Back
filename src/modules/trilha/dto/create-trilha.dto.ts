@@ -6,9 +6,6 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { CreateDadosDto } from 'src/modules/dados/dto/create-dados.dto';
-
 export class CreateTrilhaDto {
   @ApiProperty({
     description: 'The name of the track',
@@ -29,7 +26,7 @@ export class CreateTrilhaDto {
     example: '2023-05-28T14:35:00Z',
   })
   @IsISO8601()
-  startMovingDateTime: string;
+  startMovingDatetime: string;
 
   @ApiPropertyOptional({
     description: 'The end time when the car stopped moving',
@@ -37,13 +34,5 @@ export class CreateTrilhaDto {
   })
   @IsISO8601()
   @IsOptional()
-  endMovingDateTime?: string;
-
-  @ApiProperty({
-    type: [CreateDadosDto],
-    description: 'List of associated data entries',
-  })
-  @ValidateNested({ each: true })
-  @Type(() => CreateDadosDto)
-  dados: CreateDadosDto[];
+  endMovingDatetime?: string;
 }
