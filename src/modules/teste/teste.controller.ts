@@ -8,8 +8,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateTesteDto } from './dto/create-teste.dto';
-import { UpdateTesteDto } from './dto/update-teste.dto';
 import { TesteService } from './teste.service';
 
 @Controller('api/teste')
@@ -18,8 +16,8 @@ export class TesteController {
   constructor(private readonly testeService: TesteService) {}
 
   @Post('/create')
-  create(@Body() createTesteDto: CreateTesteDto) {
-    return this.testeService.create(createTesteDto);
+  create(@Body() createTesteDto: any) {
+    return this.testeService.create({ name: 'oi' });
   }
 
   @Get()
@@ -33,7 +31,7 @@ export class TesteController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTesteDto: UpdateTesteDto) {
+  update(@Param('id') id: string, @Body() updateTesteDto: any) {
     return this.testeService.update(+id, updateTesteDto);
   }
 
