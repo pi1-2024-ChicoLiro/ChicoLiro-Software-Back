@@ -68,6 +68,8 @@ export class DadosService {
         where: { id },
         data: updateDadosDto,
       });
+
+      return response;
     } catch (err) {
       throw new HttpException(
         {

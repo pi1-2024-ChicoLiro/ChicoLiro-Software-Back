@@ -29,11 +29,11 @@ export class TrilhaController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.trilhaService.findOne(+id);
+    return this.trilhaService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTrilhaDto: UpdateTrilhaDto) {
-    return this.trilhaService.update(+id, updateTrilhaDto);
+    return this.trilhaService.update(id, updateTrilhaDto);
   }
 }
