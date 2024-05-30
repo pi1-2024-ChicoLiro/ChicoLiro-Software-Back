@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({ origin: '*' });
 
   const config = new DocumentBuilder()
     .setTitle('Chicoliro API ')
@@ -13,7 +14,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  // app.setGlobalPrefix('api');
   await app.listen(3000);
 }
 bootstrap();

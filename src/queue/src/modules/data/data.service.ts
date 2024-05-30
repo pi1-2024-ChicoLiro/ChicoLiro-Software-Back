@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
-import { DATA_QUEUE } from '../../contants';
+import { DATA_QUEUE } from 'src/shared/constants';
 
 @Injectable()
 export class DataService {
