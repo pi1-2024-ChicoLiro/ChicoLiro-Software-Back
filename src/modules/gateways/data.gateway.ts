@@ -29,12 +29,12 @@ export class DataGateway
     console.log('servidor iniciado');
   }
 
-  @SubscribeMessage('data')
+  @SubscribeMessage('receive-data')
   newData(client: Socket, @MessageBody() body: any) {
     this.dataQueueService.handleData(body);
   }
 
   sendData(@MessageBody() body: any) {
-    this.server.emit('get-data', body);
+    this.server.emit('emit-data', body);
   }
 }
