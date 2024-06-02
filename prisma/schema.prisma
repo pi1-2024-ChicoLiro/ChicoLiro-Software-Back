@@ -7,20 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model trilha {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  isMoving Boolean
-  startMovingDatetime DateTime
-  endMovingDatetime DateTime?
+model dados {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  TrilhaID          String @db.ObjectId
+  infraVermelhoDird Int
+  infraVermelhoEsq  Int
+  infraVermelhoMeio Int
+  rpm               Int
+  tensao            Int
 }
 
-model dados {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  TrilhaID String @db.ObjectId
-  rpm Int
-  infraVermelhoEsq Int
-  infraVermelhoMeio Int
-  infraVermelhoDird Int
-  tensao Int
+model trilha {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  endMovingDatetime   DateTime? @db.Date
+  isMoving            Boolean
+  name                String
+  startMovingDatetime DateTime  @db.Date
 }

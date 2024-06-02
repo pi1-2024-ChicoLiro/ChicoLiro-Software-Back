@@ -1,11 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsISO8601,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsBoolean, IsISO8601, IsOptional, IsString } from 'class-validator';
 export class CreateTrilhaDto {
   @ApiProperty({
     description: 'The name of the track',
