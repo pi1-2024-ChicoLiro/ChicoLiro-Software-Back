@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TesteModule } from './modules/teste/teste.module';
-import { QueueModule } from './queue/queue.module';
-
+import { DadosModule } from './modules/dados/dados.module';
+import { TrilhaModule } from './modules/trilha/trilha.module';
 @Module({
-  imports: [QueueModule, TesteModule],
+  imports: [TrilhaModule, DadosModule],
   controllers: [],
   providers: [],
 })

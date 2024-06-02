@@ -7,8 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Teste {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  age  Int?
-  name String
+model dados {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  TrilhaID          String @db.ObjectId
+  infraVermelhoDird Int
+  infraVermelhoEsq  Int
+  infraVermelhoMeio Int
+  rpm               Int
+  tensao            Int
+}
+
+model trilha {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  endMovingDatetime   DateTime? @db.Date
+  isMoving            Boolean
+  name                String
+  startMovingDatetime DateTime  @db.Date
 }
