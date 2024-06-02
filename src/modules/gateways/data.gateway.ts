@@ -8,11 +8,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { DataService } from 'src/queue/src/modules/data/data.service';
 
 @WebSocketGateway({ transports: ['websocket'] })
 export class DataGateway
   implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect
 {
+  constructor(private dataQueueService: DataService) {}
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
@@ -23,13 +25,16 @@ export class DataGateway
     console.log('Cliente desconectado: ', client.id);
   }
 
-  afterInit(server: any) {
+  afterInit() {
     console.log('servidor iniciado');
-    // console.log(server);
   }
 
   @SubscribeMessage('data')
   newData(client: Socket, @MessageBody() body: any) {
-    console.log(body);
+    this.dataQueueService.handleData(body);
+  }
+
+  sendData(@MessageBody() body: any) {
+    this.server.emit('get-data', body);
   }
 }
