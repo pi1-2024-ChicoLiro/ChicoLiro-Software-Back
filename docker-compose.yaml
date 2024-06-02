@@ -1,17 +1,30 @@
 services:
- 
-  redisChicoliroLocal:
+  chicoliro-back:
+    build: .
+    container_name: chicoliro-back
+    ports:
+      - '3005:3005'
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - .:/usr/src/api
+      - /usr/src/api/node_modules
+    restart: unless-stopped
+    depends_on:
+      - redisLocal
+
+  redisLocal:
     container_name: 'redis'
     image: bitnami/redis:latest
     environment:
-      - REDIS_PASSWORD=fddfsdf3324k3l4k32
+      - REDIS_PASSWORD=NKaw8zKdqC4AE9dT
       - REDIS_PORT_NUMBER=6000
     command: /opt/bitnami/scripts/redis/run.sh
     restart: unless-stopped
     ports:
       - '6000:6000'
     volumes:
-      - redisChicoliroLocal:/data
+      - redisLocal:/data
 volumes:
-  redisChicoliroLocal:
+  redisLocal:
     driver: local

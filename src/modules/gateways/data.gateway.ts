@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   MessageBody,
   OnGatewayConnection,
@@ -10,23 +11,33 @@ import {
 import { Server, Socket } from 'socket.io';
 import { DataService } from 'src/queue/src/modules/data/data.service';
 
-@WebSocketGateway({ transports: ['websocket'] })
+@WebSocketGateway({
+  transports: ['websocket'],
+  cors: {
+    origin: '*',
+  },
+})
 export class DataGateway
   implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect
 {
+  logger = new Logger(DataGateway.name);
   constructor(private dataQueueService: DataService) {}
+
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
-    console.log('Cliente conectado: ', client.id);
+    this.logger.log('Cliente conectado: ' + client.id);
+    // console.log('Cliente conectado: ', client.id);
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Cliente desconectado: ', client.id);
+    this.logger.log('Cliente desconectado: ' + client.id);
+    // console.log('Cliente desconectado: ', client.id);
   }
 
   afterInit() {
-    console.log('servidor iniciado');
+    this.logger.log('Servidor iniciado');
+    // console.log('servidor iniciado');
   }
 
   @SubscribeMessage('receive-data')
