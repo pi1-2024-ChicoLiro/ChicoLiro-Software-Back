@@ -8,9 +8,9 @@ import { DataModule } from './src/modules/data/data.module';
   imports: [
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
+        host: 'redisLocal',
         port: 6000,
-        password: 'fddfsdf3324k3l4k32',
+        password: 'NKaw8zKdqC4AE9dT',
       },
     }),
     BullBoardModule.forRoot({

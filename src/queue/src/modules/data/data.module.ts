@@ -2,7 +2,8 @@ import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
-import { DATA_QUEUE } from '../../contants';
+import { DataGateway } from 'src/modules/gateways/data.gateway';
+import { DATA_QUEUE } from 'src/shared/constants';
 import { DataConsumer } from './data.consumer';
 import { DataService } from './data.service';
 
@@ -16,7 +17,7 @@ import { DataService } from './data.service';
       adapter: BullAdapter,
     }),
   ],
-  providers: [DataService, DataConsumer],
+  providers: [DataService, DataConsumer, DataGateway],
   exports: [BullModule],
 })
 export class DataModule {}
