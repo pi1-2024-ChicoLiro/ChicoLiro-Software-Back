@@ -1,19 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTrilhaDto } from './dto/create-trilha.dto';
 import { UpdateTrilhaDto } from './dto/update-trilha.dto';
 import { TrilhaService } from './trilha.service';
 
 @Controller('api/trilha')
-@ApiTags('teste')
+@ApiTags('Trilha')
 export class TrilhaController {
   constructor(private readonly trilhaService: TrilhaService) {}
 

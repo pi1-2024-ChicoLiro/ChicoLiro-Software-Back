@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
-import { DadosService } from './dados.service';
-import { DadosController } from './dados.controller';
 import { PrismaService } from 'database/prisma.service';
+import { DataModule } from 'src/queue/src/modules/data/data.module';
+import { DataService } from 'src/queue/src/modules/data/data.service';
+import { DadosController } from './dados.controller';
+import { DadosService } from './dados.service';
 
 @Module({
-  providers: [DadosService, PrismaService],
+  imports: [DataModule],
+  providers: [DadosService, PrismaService, DataService],
   controllers: [DadosController],
 })
 export class DadosModule {}

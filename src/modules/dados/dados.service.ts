@@ -1,11 +1,15 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
+import { DataService } from 'src/queue/src/modules/data/data.service';
 import { CreateDadosDto } from './dto/create-dados.dto';
 import { UpdateDadosDto } from './dto/update-dados.dto';
 
 @Injectable()
 export class DadosService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private dataQueueService: DataService,
+  ) {}
 
   async create(createDadosDto: CreateDadosDto) {
     try {
@@ -13,7 +17,6 @@ export class DadosService {
         data: createDadosDto,
       });
 
-      console.log(response);
       return response;
     } catch (err) {
       throw new HttpException(
@@ -80,5 +83,9 @@ export class DadosService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async receiveData(data: any) {
+    await this.dataQueueService.handleData(data);
   }
 }

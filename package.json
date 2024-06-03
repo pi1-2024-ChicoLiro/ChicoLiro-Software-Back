@@ -23,10 +23,12 @@
   "dependencies": {
     "@bull-board/api": "^5.18.3",
     "@bull-board/nestjs": "^5.18.3",
+    "@fastify/static": "^7.0.4",
     "@nestjs/bull": "^10.1.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-fastify": "^10.3.8",
     "@nestjs/platform-socket.io": "^10.3.8",
     "@nestjs/swagger": "^7.3.1",
     "@nestjs/websockets": "^10.3.8",

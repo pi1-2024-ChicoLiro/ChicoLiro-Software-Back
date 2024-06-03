@@ -1,19 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { DadosService } from './dados.service';
 import { CreateDadosDto } from './dto/create-dados.dto';
 import { UpdateDadosDto } from './dto/update-dados.dto';
-import { DadosService } from './dados.service';
 
 @Controller('api/dados')
-@ApiTags('teste')
+@ApiTags('Dados')
 export class DadosController {
   constructor(private readonly dadosService: DadosService) {}
 
@@ -35,5 +27,10 @@ export class DadosController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDadosDto: UpdateDadosDto) {
     return this.dadosService.update(id, updateDadosDto);
+  }
+
+  @Post('receive-data')
+  receiveData(@Body() data: any) {
+    return this.dadosService.receiveData({ message: 'teste api' });
   }
 }

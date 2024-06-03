@@ -10,7 +10,7 @@ export class DataConsumer {
   constructor(private dataGateway: DataGateway) {}
   @Process()
   async handleData(job: Job) {
-    this.logger.log('Recebendo dados: ' + job.data);
+    this.logger.log('Recebendo dados: ' + JSON.stringify(job.data));
     // console.log({ fila: job.data });
     this.dataGateway.sendData(job.data);
   }

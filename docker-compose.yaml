@@ -10,21 +10,21 @@ services:
       - .:/usr/src/api
       - /usr/src/api/node_modules
     restart: unless-stopped
-    depends_on:
-      - redisLocal
+    # depends_on:
+    #   - redisLocal
 
-  redisLocal:
-    container_name: 'redis'
-    image: bitnami/redis:latest
-    environment:
-      - REDIS_PASSWORD=NKaw8zKdqC4AE9dT
-      - REDIS_PORT_NUMBER=6000
-    command: /opt/bitnami/scripts/redis/run.sh
-    restart: unless-stopped
-    ports:
-      - '6000:6000'
-    volumes:
-      - redisLocal:/data
-volumes:
-  redisLocal:
-    driver: local
+#   redisLocal:
+#     container_name: 'redis'
+#     image: bitnami/redis:latest
+#     environment:
+#       - REDIS_PASSWORD=NKaw8zKdqC4AE9dT
+#       - REDIS_PORT_NUMBER=6000
+#     command: /opt/bitnami/scripts/redis/run.sh
+#     restart: unless-stopped
+#     ports:
+#       - '6000:6000'
+#     volumes:
+#       - redisLocal:/data
+# volumes:
+#   redisLocal:
+#     driver: local
