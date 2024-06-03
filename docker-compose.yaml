@@ -10,8 +10,8 @@ services:
       - .:/usr/src/api
       - /usr/src/api/node_modules
     restart: unless-stopped
-    # depends_on:
-    #   - redisLocal
+    networks:
+      - my_shared_network
 
 #   redisLocal:
 #     container_name: 'redis'
@@ -25,6 +25,12 @@ services:
 #       - '6000:6000'
 #     volumes:
 #       - redisLocal:/data
+    
 # volumes:
 #   redisLocal:
 #     driver: local
+
+networks:
+  my_shared_network:
+    external: true
+
