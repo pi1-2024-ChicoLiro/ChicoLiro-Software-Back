@@ -8,13 +8,11 @@ datasource db {
 }
 
 model dados {
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
-  TrilhaID          String @db.ObjectId
-  infraVermelhoDird Int
-  infraVermelhoEsq  Int
-  infraVermelhoMeio Int
-  rpm               Int
-  tensao            Int
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  TrilhaID    String @db.ObjectId
+  rpmMotorDir Int?
+  rpmMotorEsq Int?
+  tensao      Int?
 }
 
 model trilha {

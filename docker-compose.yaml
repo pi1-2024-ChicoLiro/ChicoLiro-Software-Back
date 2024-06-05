@@ -1,36 +1,36 @@
 services:
-  # chicoliro-back:
-  #   build: .
-  #   container_name: chicoliro-back
-  #   ports:
-  #     - '3005:3005'
-  #   environment:
-  #     - TZ=America/Sao_Paulo
-  #   volumes:
-  #     - .:/usr/src/api
-  #     - /usr/src/api/node_modules
-  #   restart: unless-stopped
-  #   networks:
-  #     - my_shared_network
-
-  redisLocal:
-    container_name: 'redis'
-    image: bitnami/redis:latest
-    environment:
-      - REDIS_PASSWORD=NKaw8zKdqC4AE9dT
-      - REDIS_PORT_NUMBER=6000
-    command: /opt/bitnami/scripts/redis/run.sh
-    restart: unless-stopped
+  chicoliro-back:
+    build: .
+    container_name: chicoliro-back
     ports:
-      - '6000:6000'
+      - '3005:3005'
+    environment:
+      - TZ=America/Sao_Paulo
     volumes:
-      - redisLocal:/data
-    
-volumes:
-  redisLocal:
-    driver: local
+      - .:/usr/src/api
+      - /usr/src/api/node_modules
+    restart: unless-stopped
+    networks:
+      - my_shared_network
 
-# networks:
-#   my_shared_network:
-#     external: true
+#   redisLocal:
+#     container_name: 'redis'
+#     image: bitnami/redis:latest
+#     environment:
+#       - REDIS_PASSWORD=NKaw8zKdqC4AE9dT
+#       - REDIS_PORT_NUMBER=6000
+#     command: /opt/bitnami/scripts/redis/run.sh
+#     restart: unless-stopped
+#     ports:
+#       - '6000:6000'
+#     volumes:
+#       - redisLocal:/data
+    
+# volumes:
+#   redisLocal:
+#     driver: local
+
+networks:
+  my_shared_network:
+    external: true
 
