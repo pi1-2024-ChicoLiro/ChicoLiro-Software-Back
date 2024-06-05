@@ -31,6 +31,6 @@ export class DadosController {
 
   @Post('receive-data')
   receiveData(@Body() data: any) {
-    return this.dadosService.receiveData({ message: 'teste api' });
+    return this.dadosService.receiveData(data);
   }
 }
