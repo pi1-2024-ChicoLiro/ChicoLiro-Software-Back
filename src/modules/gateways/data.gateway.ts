@@ -46,6 +46,6 @@ export class DataGateway
   }
 
   sendData(@MessageBody() body: any) {
-    this.server.emit('emit-data', body);
+    this.server.emit('front-data', body);
   }
 }
