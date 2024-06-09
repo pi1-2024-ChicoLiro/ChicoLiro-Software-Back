@@ -8,17 +8,23 @@ datasource db {
 }
 
 model dados {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  TrilhaID    String @db.ObjectId
-  rpmMotorDir Int?
-  rpmMotorEsq Int?
-  tensao      Int?
+  id                     String @id @default(auto()) @map("_id") @db.ObjectId
+  trilha                 trilha @relation(fields: [trilhaId], references: [id])
+  trilhaId               String @db.ObjectId
+  rpmMotorDir            Float?
+  rpmMotorEsq            Float?
+  tensao                 Float?
+  velocidadeInstantanea  Float?
+  acelaeracaoInstantanea Float?
+  consumoEnergetico      Float?
 }
 
 model trilha {
   id                  String    @id @default(auto()) @map("_id") @db.ObjectId
   endMovingDatetime   DateTime? @db.Date
   isMoving            Boolean
-  name                String
   startMovingDatetime DateTime  @db.Date
+  distanciaPercorrida Float?
+  tempoDePercurso     String?
+  dados               dados[]
 }
