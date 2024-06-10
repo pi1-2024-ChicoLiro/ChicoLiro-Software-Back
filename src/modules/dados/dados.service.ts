@@ -1,8 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
 import { DataService } from 'src/queue/src/modules/data/data.service';
-import { CreateDadosDto } from './dto/create-dados.dto';
-import { UpdateDadosDto } from './dto/update-dados.dto';
+import { ResponseMessageDto } from 'src/shared/dto/ResponseMessage.dto';
 
 @Injectable()
 export class DadosService {
@@ -11,18 +10,33 @@ export class DadosService {
     private dataQueueService: DataService,
   ) {}
 
-  async create(createDadosDto: CreateDadosDto) {
+  async findbyTrilha(trilhaId: string, page: number, limit: number) {
     try {
-      const response = await this.prismaService.dados.create({
-        data: createDadosDto,
+      const [dados, count] = await Promise.all([
+        await this.prismaService.dados.findMany({
+          where: { trilhaId },
+          take: limit,
+          skip: (page - 1) * limit,
+          orderBy: { createdAt: 'asc' },
+        }),
+        await this.prismaService.dados.count({
+          where: { trilhaId },
+        }),
+      ]);
+
+      dados.forEach((item: any) => {
+        item.rpm = (item.rpmMotorDir + item.rpmMotorEsq) / 2;
       });
 
-      return response;
+      return new ResponseMessageDto({
+        success: true,
+        data: { dados, count },
+      });
     } catch (err) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: 'Could not create the record',
+          error: 'Could not find the record',
           errorLog: err,
         },
         HttpStatus.BAD_REQUEST,
@@ -30,10 +44,25 @@ export class DadosService {
     }
   }
 
-  async findAll() {
+  async getAll(page: number, limit: number) {
     try {
-      const response = await this.prismaService.dados.findMany();
-      return response;
+      const [dados, count] = await Promise.all([
+        await this.prismaService.dados.findMany({
+          take: limit,
+          skip: (page - 1) * limit,
+          orderBy: { createdAt: 'asc' },
+        }),
+        await this.prismaService.dados.count(),
+      ]);
+
+      dados.forEach((item: any) => {
+        item.rpm = (item.rpmMotorDir + item.rpmMotorEsq) / 2;
+      });
+
+      return new ResponseMessageDto({
+        success: true,
+        data: { dados, count },
+      });
     } catch (err) {
       throw new HttpException(
         {
@@ -50,26 +79,6 @@ export class DadosService {
     try {
       const response = await this.prismaService.dados.findUnique({
         where: { id },
-      });
-
-      return response;
-    } catch (err) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Could not find the record',
-          errorLog: err,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  async update(id: string, updateDadosDto: UpdateDadosDto) {
-    try {
-      const response = await this.prismaService.dados.update({
-        where: { id },
-        data: updateDadosDto,
       });
 
       return response;

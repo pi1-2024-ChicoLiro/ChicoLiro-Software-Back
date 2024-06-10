@@ -1,6 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
+import { ResponseMessageDto } from 'src/shared/dto/ResponseMessage.dto';
 import { CreateTrilhaDto } from './dto/create-trilha.dto';
+import { FailedTrilhaDto } from './dto/failed-trilha.dto';
 import { UpdateTrilhaDto } from './dto/update-trilha.dto';
 @Injectable()
 export class TrilhaService {
@@ -9,10 +11,17 @@ export class TrilhaService {
   async create(createTrilhaDto: CreateTrilhaDto) {
     try {
       const response = await this.prismaService.trilha.create({
-        data: createTrilhaDto,
+        data: {
+          isMoving: true,
+          startMovingDatetime: createTrilhaDto.startMovingDatetime,
+          createdAt: new Date(),
+        },
       });
-      console.log(response);
-      return response;
+      return new ResponseMessageDto({
+        success: true,
+        data: response,
+        message: 'Trilha criada com sucesso!',
+      });
     } catch (err) {
       throw new HttpException(
         {
@@ -24,51 +33,72 @@ export class TrilhaService {
     }
   }
 
-  async findAll() {
+  async failed(body: FailedTrilhaDto) {
     try {
-      const trilhas = await this.prismaService.trilha.findMany();
-
-      const todosDados = await this.prismaService.dados.findMany();
-
-      const response = trilhas.map((trilha) => {
-        const dadosRelacionados = todosDados.filter(
-          (dados) => dados.TrilhaID === trilha.id,
-        );
-        return {
-          ...trilha,
-          dados: dadosRelacionados,
-        };
+      const trilha = await this.prismaService.trilha.findFirst({
+        where: { isMoving: true },
       });
 
-      return response;
+      if (!trilha) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'Could not find the record',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const response = await this.prismaService.trilha.update({
+        where: { id: trilha.id },
+        data: {
+          isMoving: false,
+          endMovingDatetime: body.endMovingDatetime,
+          updatedAt: new Date(),
+        },
+      });
+
+      return new ResponseMessageDto({
+        success: true,
+        data: response,
+        message: 'Trilha criada com sucesso!',
+      });
     } catch (err) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: 'Could not find the record',
-          errorLog: err,
+          error: 'Could not create the record',
         },
         HttpStatus.BAD_REQUEST,
       );
     }
   }
 
-  async findOne(id: string) {
+  async getPaginado(trilhaId: string, page: number, limit: number) {
     try {
-      const trilha = await this.prismaService.trilha.findUnique({
-        where: { id },
+      const [trilhas, count] = await Promise.all([
+        await this.prismaService.trilha.findMany({
+          where: { id: trilhaId },
+          take: limit,
+          skip: (page - 1) * limit,
+        }),
+        await this.prismaService.trilha.count({
+          where: { id: trilhaId },
+        }),
+      ]);
+
+      trilhas.map((item: any, index) => {
+        item.name =
+          'Trilha ' +
+          (index + 1) +
+          ' - ' +
+          (item.failed ? 'Falhada' : 'Bem-sucedida');
       });
 
-      const todosDados = await this.prismaService.dados.findMany({
-        where: { id },
+      return new ResponseMessageDto({
+        success: true,
+        data: { trilhas, count },
       });
-
-      const response = {
-        ...trilha,
-        dados: todosDados,
-      };
-
-      return response;
     } catch (err) {
       throw new HttpException(
         {
@@ -89,6 +119,32 @@ export class TrilhaService {
       });
 
       return response;
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Could not find the record',
+          errorLog: err,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async getAll() {
+    try {
+      const response = await this.prismaService.trilha.findMany();
+      response.map((item: any, index) => {
+        item.name =
+          'Trilha ' +
+          (index + 1) +
+          ' - ' +
+          (item.failed ? 'Falhada' : 'Bem-sucedida');
+      });
+      return new ResponseMessageDto({
+        success: true,
+        data: response,
+      });
     } catch (err) {
       throw new HttpException(
         {

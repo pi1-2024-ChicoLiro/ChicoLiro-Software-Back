@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateDadosDto {
   @ApiProperty({
@@ -13,28 +13,28 @@ export class CreateDadosDto {
     description: 'RPM value',
     example: 3000,
   })
-  @IsInt()
+  @IsNumber()
   rpm: number;
 
   @ApiProperty({
     description: 'Infrared left sensor value',
     example: 1,
   })
-  @IsInt()
+  @IsNumber()
   infraVermelhoEsq: number;
 
   @ApiProperty({
     description: 'Infrared middle sensor value',
     example: 1,
   })
-  @IsInt()
+  @IsNumber()
   infraVermelhoMeio: number;
 
   @ApiProperty({
     description: 'Infrared right sensor value',
     example: 1,
   })
-  @IsInt()
+  @IsNumber()
   infraVermelhoDird: number;
 
   @ApiProperty({
