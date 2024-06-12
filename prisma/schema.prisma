@@ -14,7 +14,6 @@ model dados {
   tensao                 Float?
   velocidadeInstantanea  Float?
   acelaeracaoInstantanea Float?
-  consumoEnergetico      Float?
   createdAt              DateTime? @default(now()) @db.Date
   updatedAt              DateTime? @default(now()) @db.Date
   trilhaId               String    @db.ObjectId
