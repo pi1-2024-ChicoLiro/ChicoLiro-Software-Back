@@ -89,10 +89,18 @@ export class TrilhaService {
 
       trilhas.map((item: any, index) => {
         item.name =
-          'Trilha ' +
+          'Percurso ' +
           (index + 1) +
           ' - ' +
-          (item.failed ? 'Falhada' : 'Bem-sucedida');
+          (item.failed ? 'Falhado' : 'Bem-sucedido');
+
+        item.isMovingFormatted = item.isMoving ? 'Sim' : 'Não';
+        item.startMovingDatetimeFormatted = new Date(
+          item.startMovingDatetime,
+        ).toLocaleString();
+
+        item.endMovingDatetimeFormatted =
+          item?.endMovingDatetime?.toLocaleString();
       });
 
       return new ResponseMessageDto({
@@ -136,7 +144,7 @@ export class TrilhaService {
       const response = await this.prismaService.trilha.findMany();
       response.map((item: any, index) => {
         item.name =
-          'Trilha ' +
+          'Percurso ' +
           (index + 1) +
           ' - ' +
           (item.failed ? 'Falhada' : 'Bem-sucedida');

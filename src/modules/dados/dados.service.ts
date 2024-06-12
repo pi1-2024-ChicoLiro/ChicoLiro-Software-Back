@@ -26,6 +26,11 @@ export class DadosService {
 
       dados.forEach((item: any) => {
         item.rpm = (item.rpmMotorDir + item.rpmMotorEsq) / 2;
+
+        item.createdAt = new Date(item.createdAt).toLocaleString('pt-BR', {
+          timeZone: 'America/Sao_Paulo',
+          formatMatcher: 'best fit',
+        });
       });
 
       return new ResponseMessageDto({
