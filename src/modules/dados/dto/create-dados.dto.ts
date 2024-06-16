@@ -7,7 +7,7 @@ export class CreateDadosDto {
     example: '60d0fe4f5311236168a109ca',
   })
   @IsString()
-  TrilhaID: string;
+  trilhaID: string;
 
   @ApiProperty({
     description: 'RPM value',

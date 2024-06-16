@@ -15,8 +15,9 @@ model dados {
   rpmMotorEsq            Float?
   tensao                 Float?
   velocidadeInstantanea  Float?
-  acelaeracaoInstantanea Float?
+  aceleracaoInstantanea  Float?
   consumoEnergetico      Float?
+  distanciaPercorrida    Float?
 }
 
 model trilha {
