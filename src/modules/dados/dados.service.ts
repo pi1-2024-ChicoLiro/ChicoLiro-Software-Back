@@ -86,6 +86,7 @@ export class DadosService {
   }
 
   async receiveData(data: any) {
+    data.date = new Date().getTime();
     await this.dataQueueService.handleData(data);
   }
 }

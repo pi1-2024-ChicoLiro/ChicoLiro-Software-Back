@@ -8,16 +8,17 @@ datasource db {
 }
 
 model dados {
-  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
-  rpmMotorDir            Float?
-  rpmMotorEsq            Float?
-  tensao                 Float?
-  velocidadeInstantanea  Float?
-  acelaeracaoInstantanea Float?
-  createdAt              DateTime? @default(now()) @db.Date
-  updatedAt              DateTime? @default(now()) @db.Date
-  trilhaId               String    @db.ObjectId
-  trilha                 trilha    @relation(fields: [trilhaId], references: [id])
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  date                  Float?
+  rpmMotorDir           Float?
+  rpmMotorEsq           Float?
+  tensao                Float?
+  velocidadeInstantanea Float?
+  aceleracaoInstantanea Float?
+  createdAt             DateTime? @default(now()) @db.Date
+  updatedAt             DateTime? @default(now()) @db.Date
+  trilhaId              String    @db.ObjectId
+  trilha                trilha    @relation(fields: [trilhaId], references: [id])
 }
 
 model trilha {

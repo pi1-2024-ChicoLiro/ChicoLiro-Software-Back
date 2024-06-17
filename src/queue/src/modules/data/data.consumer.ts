@@ -59,9 +59,6 @@ export class DataConsumer {
           distanciaPercorrida: this.getDistanciaTotal, // Salva a distância total
         },
       });
-      // Reinicia a distância total para a próxima trilha
-      this.setDistanciaTotal = 0;
-      this.lastRequestTime = new Date().getTime();
       return;
     }
 
@@ -72,6 +69,9 @@ export class DataConsumer {
           startMovingDatetime: new Date(),
         },
       });
+      // Reinicia a distância total para a próxima trilha
+      this.setDistanciaTotal = 0;
+      this.lastRequestTime = Number(this.prismaService.dados.fields.date);
     }
 
     const tempoRequest = this.calcularTempoDoRequest();
@@ -85,7 +85,7 @@ export class DataConsumer {
     const distancia = this.calcularDistancia(velocidade, tempoRequest);
 
     this.setDistanciaTotal = this.getDistanciaTotal + distancia;
-    this.lastRequestTime = new Date().getTime();
+    this.lastRequestTime = Number(this.prismaService.dados.fields.date);
 
     const dados = await this.prismaService.dados.create({
       data: {
@@ -100,7 +100,6 @@ export class DataConsumer {
         aceleracaoInstantanea: aceleracao,
         velocidadeInstantanea: velocidade,
         // consumoEnergetico: consumo,
-        distanciaPercorrida: this.getDistanciaTotal,
       },
     });
 
@@ -111,7 +110,10 @@ export class DataConsumer {
   }
 
   calcularTempoDoRequest() {
-    return (new Date().getTime() - this.lastRequestTime) / 1000;
+    return (
+      (Number(this.prismaService.dados.fields.date) - this.lastRequestTime) /
+      1000
+    );
   }
 
   calcularVelocidade(rpmMotorDir: number, rpmMotorEsq: number) {
