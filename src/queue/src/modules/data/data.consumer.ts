@@ -11,6 +11,7 @@ export class DataConsumer {
   logger = new Logger(DataConsumer.name);
   private distanciaTotal = 0; // Variável para acumular a distância total
   private lastRequestTime = 0;
+  private lastVelocidade = 0;
 
   constructor(
     private dataGateway: DataGateway,
@@ -23,6 +24,22 @@ export class DataConsumer {
 
   public get getDistanciaTotal(): number {
     return this.distanciaTotal;
+  }
+
+  public set setLastVelocidade(v: number) {
+    this.lastVelocidade = v;
+  }
+
+  public get getLastVelocidade(): number {
+    return this.lastVelocidade;
+  }
+
+  public set setLastRequestTime(v: number) {
+    this.lastRequestTime = v;
+  }
+
+  public get getLastRequestTime(): number {
+    return this.lastRequestTime;
   }
 
   @Process()
@@ -56,7 +73,7 @@ export class DataConsumer {
               1000
             ).toFixed(0) +
             ' segundos',
-          distanciaPercorrida: this.getDistanciaTotal, // Salva a distância total
+          distanciaPercorrida: this.distanciaTotal, // Salva a distância total
         },
       });
       return;
@@ -70,7 +87,8 @@ export class DataConsumer {
         },
       });
       // Reinicia a distância total para a próxima trilha
-      this.setDistanciaTotal = 0;
+      this.distanciaTotal = 0;
+      this.lastVelocidade = 0;
       this.lastRequestTime = Number(this.prismaService.dados.fields.date);
     }
 
@@ -84,7 +102,8 @@ export class DataConsumer {
 
     const distancia = this.calcularDistancia(velocidade, tempoRequest);
 
-    this.setDistanciaTotal = this.getDistanciaTotal + distancia;
+    this.lastVelocidade = velocidade;
+    this.distanciaTotal = this.distanciaTotal + distancia;
     this.lastRequestTime = Number(this.prismaService.dados.fields.date);
 
     const dados = await this.prismaService.dados.create({
@@ -120,11 +139,12 @@ export class DataConsumer {
     const mediaRpm = (rpmMotorDir + rpmMotorEsq) / 2;
     const raio = 3.4; // cm
     const velocidadeAngular = (mediaRpm * 2 * Math.PI) / 60;
-    return raio * velocidadeAngular;
+    return Number((raio * velocidadeAngular).toFixed(2));
   }
 
   calcularAceleracao(velocidade: number, tempo: number) {
-    return velocidade / tempo;
+    const variacaoVelocidade = velocidade - this.lastVelocidade;
+    return Number((variacaoVelocidade / tempo).toFixed(2));
   }
 
   // calcularConsumoEnergetico(velocidade: number, tempo: number) {
@@ -132,6 +152,6 @@ export class DataConsumer {
   // }
 
   calcularDistancia(velocidade: number, tempo: number) {
-    return velocidade * tempo;
+    return Number((velocidade * tempo).toFixed(2));
   }
 }
