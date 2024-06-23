@@ -6,12 +6,12 @@ export class GraficosService {
   constructor(private prismaService: PrismaService) {}
 
   async getTrilhasSucedidas() {
-    return await this.prismaService.trilha.findMany({
+    const trilhas = await this.prismaService.trilha.findMany({
       where: {
         failed: false,
       },
       orderBy: {
-        startMovingDatetime: 'asc',
+        startMovingDatetime: 'desc',
       },
       take: 3,
       include: {
@@ -22,6 +22,8 @@ export class GraficosService {
         },
       },
     });
+
+    return trilhas.reverse();
   }
 
   async formatarDadosGraficos() {
