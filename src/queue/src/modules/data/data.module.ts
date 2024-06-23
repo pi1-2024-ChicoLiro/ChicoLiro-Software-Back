@@ -4,6 +4,7 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
 import { DataGateway } from 'src/modules/gateways/data.gateway';
+import { GraficosService } from 'src/modules/graficos/graficos.service';
 import { DATA_QUEUE } from 'src/shared/constants';
 import { DataConsumer } from './data.consumer';
 import { DataService } from './data.service';
@@ -18,7 +19,13 @@ import { DataService } from './data.service';
       adapter: BullAdapter,
     }),
   ],
-  providers: [DataService, DataConsumer, DataGateway, PrismaService],
+  providers: [
+    DataService,
+    DataConsumer,
+    DataGateway,
+    PrismaService,
+    GraficosService,
+  ],
   exports: [BullModule],
 })
 export class DataModule {}

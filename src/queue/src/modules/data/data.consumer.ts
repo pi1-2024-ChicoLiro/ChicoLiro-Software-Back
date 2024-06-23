@@ -66,7 +66,7 @@ export class DataConsumer {
 
     const aceleracao = this.calcularAceleracao(velocidade, 1);
 
-    const dados = await this.prismaService.dados.create({
+    await this.prismaService.dados.create({
       data: {
         rpmMotorDir,
         rpmMotorEsq,
@@ -81,10 +81,7 @@ export class DataConsumer {
       },
     });
 
-    this.dataGateway.sendData({
-      success: true,
-      data: dados,
-    });
+    this.dataGateway.sendData();
   }
 
   //trajetoria percorrida, velocidade instantanea, aceleracao instantanea,  tempo de percurso, consumo energetico
