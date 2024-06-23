@@ -32,7 +32,7 @@ export class TrilhaService {
 
       const response = trilhas.map((trilha) => {
         const dadosRelacionados = todosDados.filter(
-          (dados) => dados.TrilhaID === trilha.id,
+          (dados) => dados.trilhaId === trilha.id,
         );
         return {
           ...trilha,

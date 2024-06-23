@@ -8,15 +8,17 @@ datasource db {
 }
 
 model dados {
-  id                     String @id @default(auto()) @map("_id") @db.ObjectId
-  trilha                 trilha @relation(fields: [trilhaId], references: [id])
-  trilhaId               String @db.ObjectId
-  rpmMotorDir            Float?
-  rpmMotorEsq            Float?
-  tensao                 Float?
-  velocidadeInstantanea  Float?
-  acelaeracaoInstantanea Float?
-  consumoEnergetico      Float?
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  date                  Float?
+  rpmMotorDir           Float?
+  rpmMotorEsq           Float?
+  tensao                Float?
+  velocidadeInstantanea Float?
+  aceleracaoInstantanea Float?
+  createdAt             DateTime? @default(now()) @db.Date
+  updatedAt             DateTime? @default(now()) @db.Date
+  trilhaId              String    @db.ObjectId
+  trilha                trilha    @relation(fields: [trilhaId], references: [id])
 }
 
 model trilha {
@@ -26,5 +28,8 @@ model trilha {
   startMovingDatetime DateTime  @db.Date
   distanciaPercorrida Float?
   tempoDePercurso     String?
+  failed              Boolean?  @default(false)
   dados               dados[]
+  createdAt           DateTime? @default(now()) @db.Date
+  updatedAt           DateTime? @default(now()) @db.Date
 }
