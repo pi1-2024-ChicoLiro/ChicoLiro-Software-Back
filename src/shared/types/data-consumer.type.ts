@@ -3,4 +3,5 @@ export interface DataConsumerType {
   rpmMotorEsq: number;
   tensao: number;
   isMoving: boolean;
+  date: any;
 }

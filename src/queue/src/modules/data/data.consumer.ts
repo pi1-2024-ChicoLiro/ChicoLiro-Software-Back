@@ -76,13 +76,13 @@ export class DataConsumer {
             id: trilha.id,
           },
         },
-        acelaeracaoInstantanea: aceleracao,
+        aceleracaoInstantanea: aceleracao,
         velocidadeInstantanea: velocidade,
       },
     });
 
     this.dataGateway.sendData({
-      sucess: true,
+      success: true,
       data: dados,
     });
   }
