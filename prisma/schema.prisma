@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model dados {
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  date                  DateTime?
+  rpmMotorDir           Float?
+  rpmMotorEsq           Float?
+  tensao                Float?
+  velocidadeInstantanea Float?
+  aceleracaoInstantanea Float?
+  createdAt             DateTime? @default(now()) @db.Date
+  updatedAt             DateTime? @default(now()) @db.Date
+  trilhaId              String    @db.ObjectId
+  trilha                trilha    @relation(fields: [trilhaId], references: [id])
+}
+
+model trilha {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  endMovingDatetime   DateTime? @db.Date
+  isMoving            Boolean
+  startMovingDatetime DateTime  @db.Date
+  distanciaPercorrida Float?
+  tempoDePercurso     String?
+  failed              Boolean?  @default(false)
+  dados               dados[]
+  createdAt           DateTime? @default(now()) @db.Date
+  updatedAt           DateTime? @default(now()) @db.Date
+}
