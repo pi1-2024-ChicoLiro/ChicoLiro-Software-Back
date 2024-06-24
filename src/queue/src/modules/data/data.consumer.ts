@@ -9,13 +9,42 @@ import { DataConsumerType } from 'src/shared/types/data-consumer.type';
 @Processor(DATA_QUEUE)
 export class DataConsumer {
   logger = new Logger(DataConsumer.name);
+  private distanciaTotal = 0; // Variável para acumular a distância total
+  private lastRequestTime = 0;
+  private lastVelocidade = 0;
+
   constructor(
     private dataGateway: DataGateway,
     private prismaService: PrismaService,
   ) {}
+
+  public set setDistanciaTotal(v: number) {
+    this.distanciaTotal = v;
+  }
+
+  public get getDistanciaTotal(): number {
+    return this.distanciaTotal;
+  }
+
+  public set setLastVelocidade(v: number) {
+    this.lastVelocidade = v;
+  }
+
+  public get getLastVelocidade(): number {
+    return this.lastVelocidade;
+  }
+
+  public set setLastRequestTime(v: number) {
+    this.lastRequestTime = v;
+  }
+
+  public get getLastRequestTime(): number {
+    return this.lastRequestTime;
+  }
+
   @Process()
   async handleData(job: Job<DataConsumerType>) {
-    const { isMoving, rpmMotorDir, rpmMotorEsq, tensao } = job.data;
+    const { isMoving, rpmMotorDir, rpmMotorEsq, tensao, date } = job.data;
 
     let trilha = await this.prismaService.trilha.findFirst({
       where: {
@@ -24,10 +53,6 @@ export class DataConsumer {
     });
 
     if (!isMoving && trilha) {
-      // const distancia = this.calcularDistancia(
-      //   trilha.velocidadeMedia,
-      //   tempo,
-      // );
       await this.prismaService.trilha.update({
         where: {
           id: trilha.id,
@@ -47,7 +72,7 @@ export class DataConsumer {
               1000
             ).toFixed(0) +
             ' segundos',
-          // distanciaPercorrida: distancia
+          distanciaPercorrida: this.distanciaTotal, // Salva a distância total
         },
       });
       return;
@@ -60,11 +85,23 @@ export class DataConsumer {
           startMovingDatetime: new Date(),
         },
       });
+      // Reinicia a distância total para a próxima trilha
+      this.distanciaTotal = 0;
+      this.lastVelocidade = 0;
+      this.lastRequestTime = Number(date);
     }
 
-    const velocidade = this.calcularVelocidade(rpmMotorDir, rpmMotorEsq); //ok
+    const tempoRequest = this.calcularTempoDoRequest(date);
 
-    const aceleracao = this.calcularAceleracao(velocidade, 1);
+    const velocidade = this.calcularVelocidade(rpmMotorDir, rpmMotorEsq);
+
+    const aceleracao = this.calcularAceleracao(velocidade, tempoRequest);
+
+    const distancia = this.calcularDistancia(velocidade, tempoRequest);
+
+    this.lastVelocidade = velocidade;
+    this.distanciaTotal = this.distanciaTotal + distancia;
+    this.lastRequestTime = Number(date);
 
     await this.prismaService.dados.create({
       data: {
@@ -78,36 +115,32 @@ export class DataConsumer {
         },
         aceleracaoInstantanea: aceleracao,
         velocidadeInstantanea: velocidade,
+        date: new Date(date),
       },
     });
 
     this.dataGateway.sendData();
   }
 
-  //trajetoria percorrida, velocidade instantanea, aceleracao instantanea,  tempo de percurso, consumo energetico
-
-  calcularTempo(distancia: number, velocidade: number) {
-    return distancia / velocidade;
+  calcularTempoDoRequest(date) {
+    return (Number(date) - this.lastRequestTime) / 1000;
   }
 
-  // calculos para cada dado
   calcularVelocidade(rpmMotorDir: number, rpmMotorEsq: number) {
     const mediaRpm = (rpmMotorDir + rpmMotorEsq) / 2;
-
-    const raio = 0.034;
-
+    const raio = 3.4; // cm
     const velocidadeAngular = (mediaRpm * 2 * Math.PI) / 60;
-
-    return raio * velocidadeAngular;
+    return Number((raio * velocidadeAngular).toFixed(2));
   }
 
   calcularAceleracao(velocidade: number, tempo: number) {
-    return velocidade / tempo;
+    const variacaoVelocidade = velocidade - this.lastVelocidade;
+    return Number((variacaoVelocidade / tempo).toFixed(2));
   }
 
   //calculos da trilha
 
   calcularDistancia(velocidade: number, tempo: number) {
-    return velocidade * tempo;
+    return Number((velocidade * tempo).toFixed(2));
   }
 }

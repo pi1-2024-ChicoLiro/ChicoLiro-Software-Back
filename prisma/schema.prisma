@@ -9,6 +9,7 @@ datasource db {
 
 model dados {
   id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  date                  DateTime?
   rpmMotorDir           Float?
   rpmMotorEsq           Float?
   tensao                Float?
