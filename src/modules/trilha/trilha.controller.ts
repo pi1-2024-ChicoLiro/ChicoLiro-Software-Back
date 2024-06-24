@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTrilhaDto } from './dto/create-trilha.dto';
-import { FailedTrilhaDto } from './dto/failed-trilha.dto';
 import { UpdateTrilhaDto } from './dto/update-trilha.dto';
 import { TrilhaService } from './trilha.service';
 
@@ -25,7 +24,7 @@ export class TrilhaController {
   }
 
   @Patch('/failed')
-  failed(@Body() body: FailedTrilhaDto) {
+  failed(@Body() body: any) {
     return this.trilhaService.failed(body);
   }
 

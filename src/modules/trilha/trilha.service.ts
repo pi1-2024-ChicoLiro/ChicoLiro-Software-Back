@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
 import { ResponseMessageDto } from 'src/shared/dto/ResponseMessage.dto';
 import { CreateTrilhaDto } from './dto/create-trilha.dto';
-import { FailedTrilhaDto } from './dto/failed-trilha.dto';
 import { UpdateTrilhaDto } from './dto/update-trilha.dto';
 @Injectable()
 export class TrilhaService {
@@ -33,7 +32,7 @@ export class TrilhaService {
     }
   }
 
-  async failed(body: FailedTrilhaDto) {
+  async failed(body: any) {
     try {
       const trilha = await this.prismaService.trilha.findFirst({
         where: { isMoving: true },
@@ -53,7 +52,7 @@ export class TrilhaService {
         where: { id: trilha.id },
         data: {
           isMoving: false,
-          endMovingDatetime: body.endMovingDatetime,
+          endMovingDatetime: new Date(),
           updatedAt: new Date(),
         },
       });
