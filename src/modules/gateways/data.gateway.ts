@@ -50,18 +50,17 @@ export class DataGateway
   }
 
   async sendData() {
-    const {
-      dadosTrilhas,
-      dadosVelocidadeAceleracaoFormatados,
-      dadosVelocidadeTempoFormatados,
-    } = await this.graficosService.formatarDadosGraficos();
+    const response = await this.graficosService.formatarDadosGraficos();
 
-    this.server.emit('velocidade-tempo-data', dadosVelocidadeTempoFormatados);
+    this.server.emit(
+      'velocidade-tempo-data',
+      response.data.dadosVelocidadeTempoFormatados,
+    );
     this.server.emit(
       'velocidade-aceleracao-data',
-      dadosVelocidadeAceleracaoFormatados,
+      response.data.dadosVelocidadeAceleracaoFormatados,
     );
 
-    this.server.emit('trilhas', dadosTrilhas);
+    this.server.emit('trilhas', response.data.dadosTrilhas);
   }
 }
