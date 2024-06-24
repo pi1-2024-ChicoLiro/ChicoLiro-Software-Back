@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'database/prisma.service';
+import { ResponseMessageDto } from 'src/shared/dto/ResponseMessage.dto';
 
 @Injectable()
 export class GraficosService {
@@ -100,10 +101,14 @@ export class GraficosService {
       dadosVelocidadeTempoFormatados.push(bodyVelocidadeTempo);
     });
 
-    return {
-      dadosVelocidadeTempoFormatados,
-      dadosVelocidadeAceleracaoFormatados,
-      dadosTrilhas,
-    };
+    return new ResponseMessageDto({
+      success: true,
+      data: {
+        dadosVelocidadeTempoFormatados,
+        dadosVelocidadeAceleracaoFormatados,
+        dadosTrilhas,
+      },
+      message: 'Dados formatados com sucesso!',
+    });
   }
 }
