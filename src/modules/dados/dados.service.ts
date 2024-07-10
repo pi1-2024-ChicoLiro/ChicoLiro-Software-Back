@@ -28,10 +28,10 @@ export class DadosService {
         item.rpm = (item.rpmMotorDir + item.rpmMotorEsq) / 2;
 
         item.aceleracaoInstantaneaFormatted =
-          item.aceleracaoInstantanea.toFixed(2);
+          item.aceleracaoInstantanea?.toFixed(2) || 0;
 
         item.velocidadeInstantaneaFormatted =
-          item.velocidadeInstantanea.toFixed(2);
+          item.velocidadeInstantanea?.toFixed(2) || 0;
 
         item.createdAtFormatted = new Date(item.createdAt).toLocaleString();
       });
@@ -66,10 +66,10 @@ export class DadosService {
       dados.forEach((item: any) => {
         item.rpm = (item.rpmMotorDir + item.rpmMotorEsq) / 2;
         item.aceleracaoInstantaneaFormatted =
-          item.aceleracaoInstantanea.toFixed(2);
+          item.aceleracaoInstantanea?.toFixed(2) || 0;
 
         item.velocidadeInstantaneaFormatted =
-          item.velocidadeInstantanea.toFixed(2);
+          item.velocidadeInstantanea?.toFixed(2) || 0;
 
         item.createdAtFormatted = new Date(item.createdAt).toLocaleString();
       });
