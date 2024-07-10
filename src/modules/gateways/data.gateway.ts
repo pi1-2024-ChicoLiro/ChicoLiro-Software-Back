@@ -50,7 +50,10 @@ export class DataGateway
   }
 
   async sendData() {
-    const response = await this.graficosService.formatarDadosGraficos();
+    const [response, line] = await Promise.all([
+      this.graficosService.formatarDadosGraficos(),
+      this.graficosService.getDataLine(),
+    ]);
 
     this.server.emit(
       'velocidade-tempo-data',
@@ -62,5 +65,6 @@ export class DataGateway
     );
 
     this.server.emit('trilhas', response.data.dadosTrilhas);
+    this.server.emit('line', line.data);
   }
 }

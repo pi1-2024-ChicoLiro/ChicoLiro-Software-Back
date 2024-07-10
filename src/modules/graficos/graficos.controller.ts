@@ -11,4 +11,9 @@ export class GraficosController {
   getAll() {
     return this.graficosService.formatarDadosGraficos();
   }
+
+  @Get('get-lines')
+  getLines() {
+    return this.graficosService.getDataLine();
+  }
 }
