@@ -111,4 +111,47 @@ export class GraficosService {
       message: 'Dados formatados com sucesso!',
     });
   }
+
+  async getDataLine() {
+    const response = await this.prismaService.dados.findMany({
+      where: {
+        trilha: {
+          failed: false,
+          // isMoving: true,
+        },
+      },
+      select: {
+        rpmMotorDir: true,
+        rpmMotorEsq: true,
+        trilhaId: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    // Agrupar os dados por trilhaId
+    const groupedData = response.reduce((acc, item) => {
+      if (!acc[item.trilhaId]) {
+        acc[item.trilhaId] = [];
+      }
+      acc[item.trilhaId].push({
+        rpmMotorDir: item.rpmMotorDir,
+        rpmMotorEsq: item.rpmMotorEsq,
+      });
+      return acc;
+    }, {});
+
+    // Converter o objeto agrupado em um array de objetos
+    const result = Object.keys(groupedData).map((trilhaId) => ({
+      trilhaId: trilhaId,
+      data: groupedData[trilhaId],
+    }));
+
+    return new ResponseMessageDto({
+      success: true,
+      data: result,
+      message: 'Dados obtidos com sucesso!',
+    });
+  }
 }
