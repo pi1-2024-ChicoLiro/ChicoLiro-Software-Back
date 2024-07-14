@@ -110,8 +110,7 @@ export class DadosService {
   }
 
   async receiveData(data: any) {
-    const json = JSON.parse(data);
-    json.date = new Date().getTime();
-    await this.dataQueueService.handleData(json);
+    data.date = new Date().getTime();
+    await this.dataQueueService.handleData(data);
   }
 }
