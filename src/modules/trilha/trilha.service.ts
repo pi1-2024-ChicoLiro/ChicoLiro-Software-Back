@@ -80,6 +80,13 @@ export class TrilhaService {
           where: { id: trilhaId },
           take: limit,
           skip: (page - 1) * limit,
+          select: {
+            id: true,
+            isMoving: true,
+            startMovingDatetime: true,
+            endMovingDatetime: true,
+            failed: true,
+          },
         }),
         await this.prismaService.trilha.count({
           where: { id: trilhaId },
@@ -94,12 +101,13 @@ export class TrilhaService {
           (item.failed ? 'Falhado' : 'Bem-sucedido');
 
         item.isMovingFormatted = item.isMoving ? 'Sim' : 'Não';
-        item.startMovingDatetimeFormatted = new Date(
+        item.startMovingDatetimeFormatted = this.formatarDataHora(
           item.startMovingDatetime,
-        ).toLocaleString();
+        );
 
-        item.endMovingDatetimeFormatted =
-          item?.endMovingDatetime?.toLocaleString();
+        item.endMovingDatetimeFormatted = this.formatarDataHora(
+          item.endMovingDatetime,
+        );
       });
 
       return new ResponseMessageDto({
@@ -162,5 +170,24 @@ export class TrilhaService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  formatarDataHora(isoString: string): string {
+    const data = new Date(isoString);
+
+    const dia = data.getDate().toString().padStart(2, '0');
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+    const ano = data.getFullYear();
+
+    let horas = data.getHours();
+    const minutos = data.getMinutes().toString().padStart(2, '0');
+    const segundos = data.getSeconds().toString().padStart(2, '0');
+
+    const periodo = horas >= 12 ? 'PM' : 'AM';
+    horas = horas % 12 || 12; // Converte 0 para 12 para formato 12h
+
+    const horaFormatada = horas.toString().padStart(2, '0');
+
+    return `${dia}/${mes}/${ano}, ${horaFormatada}:${minutos}:${segundos} ${periodo}`;
   }
 }

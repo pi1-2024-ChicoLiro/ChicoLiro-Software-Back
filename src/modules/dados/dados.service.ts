@@ -59,6 +59,14 @@ export class DadosService {
           take: limit,
           skip: (page - 1) * limit,
           orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            rpmMotorDir: true,
+            rpmMotorEsq: true,
+            aceleracaoInstantanea: true,
+            velocidadeInstantanea: true,
+            tensao: true,
+          },
         }),
         await this.prismaService.dados.count(),
       ]);
@@ -70,8 +78,6 @@ export class DadosService {
 
         item.velocidadeInstantaneaFormatted =
           item.velocidadeInstantanea?.toFixed(2) || 0;
-
-        item.createdAtFormatted = new Date(item.createdAt).toLocaleString();
       });
 
       return new ResponseMessageDto({
